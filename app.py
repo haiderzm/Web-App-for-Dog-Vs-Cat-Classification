@@ -3,14 +3,13 @@ import numpy as np
 import io
 from PIL import Image
 from flask import Flask,jsonify, render_template, request
-from flask_cors import CORS
 import tensorflow as tf
-import os
+
 
 model = tf.keras.models.load_model('dogVcat_model.h5')
 
 app = Flask(__name__)
-CORS(app)
+
 
 def preprocess_image(image, target_size):
     if image.mode != "RGB":

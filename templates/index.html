@@ -79,7 +79,7 @@
                 image: base64Image
             }
             // console.log(message);
-            $.post("http://0.0.0.0:5000/", JSON.stringify(message), function(response){
+            $.post("https://dogvscat-classifier.herokuapp.com/", JSON.stringify(message), function(response){
                 $("#res-prediction").text(response.prediction.result);
                 console.log(response.prediction);
             });

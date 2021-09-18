@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .app-title {
+            font-size: 55px;
+            color: rgb(39, 43, 54);
+            text-align: center;
+        }
+        .file-selector-style{
+            display: block;
+            padding: 10px 10px;
+            border: 1px solid black;
+            background:rgb(247, 243, 236);
+            border-radius: 10px;
+            border-width: 90%;
+            margin: 35px auto;
+            font-size: 25px;
+        }
+        .btn{
+            font-size:25px;
+            display: block;
+            margin: 25px auto;
+            box-shadow: 0px 8px 8px #8888;
+            border:1px solid rgb(55, 115, 243);
+            border-radius:10px;
+            color:white;
+            padding: 12px 12px;
+            background-color:rgb(55, 115, 243);
+        }
+        .btn:hover{
+            color:white;
+            background-color:rgb(34, 88, 206);
+        }
+        .image{
+            display: block;
+            margin: 5px auto;
+            border: 3px solid green;
+            height:200px;
+            width: 200px;
+        }
+        .res{
+            font-size:25px;
+            font-weight:bold;
+            text-align:center;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="app-title">DogVsCat Classifier</h1>
+    
+    <input id = 'image-selector' class = 'file-selector-style' type = 'file' name="imagefile">
+    <input class='btn' type="submit" value="Predict Image" id='predict-button'>
+    <img class='image' id="selected-image" src=""/>
+    <p class='res'>Result: <span id="res-prediction"></span></p>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        let base64Image;
+        $("#image-selector").change(function() {
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                let dataURL = reader.result;
+                $('#selected-image').attr("src", dataURL);
+                $('#res-prediction').text('')
+                base64Image = dataURL.replace(/^data:image\/(png|jpg|jpeg);base64,/, "") ; 
+                console.log(base64Image);
+            }
+            reader.readAsDataURL($("#image-selector")[0].files[0]);
+            
+        });
+    
+        $("#predict-button").click(function(){
+            let message = {
+                image: base64Image
+            }
+            // console.log(message);
+            $.post("http://0.0.0.0:5000/", JSON.stringify(message), function(response){
+                $("#res-prediction").text(response.prediction.result);
+                console.log(response.prediction);
+            });
+        });   
+    </script>
+</body>
+</html>
